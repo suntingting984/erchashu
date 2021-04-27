@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct tree
+{
+ int data;
+ struct tree *lchild,*rchild;
+}tree,*Tree;
+int a;
+int inittree(Tree T)
+{
+ T=(Tree)malloc(sizeof(tree));
+ T->lchild=T->rchild=NULL;
+ return 1;
+}
+void createtree(Tree &T)
+{
+ int ch;
+ scanf("%d",&ch);
+ if(ch==0)
+ T=NULL;
+ else
+ {
+  T=(Tree)malloc(sizeof(tree));
+  T->data=ch;
+  T->lchild=T->rchild=NULL;
+  createtree(T->lchild);
+  createtree(T->rchild);
+ }
+}
+typedef struct snode
+{
+ Tree *data;
+ int top;
+}Snode; 
+int initstack(Snode *S)
+{
+ S->data=(Tree *)malloc(sizeof(Tree)*100);
+ S->top=0;
+ return 1;
+}
+int enstack(Snode *S,Tree e)
+{
+ S->data[S->top]=e;
+ S->top++;
+ return 1;
+}
+Tree destack(Snode *S)
+{
+ Tree e;
+ e=S->data[S->top-1];
+ S->top--;
+ return e;
+}
+/*输出栈内元素*/ 
+void print(Snode S)
+{
+ int i=0,sum=0;
+ while(i<S.top-1)
+ {
+   sum=sum+S.data[i]->data;
+  printf("%d->",S.data[i]->data);
+  i++;
+ }
+ printf("%d。",S.data[i]->data);
+ sum=sum+S.data[i]->data;
+ printf("树的总和为：%d ",sum);
+ if(sum==a) printf("符合");
+ else printf("不符合");
+}
+Snode S;
+/*二叉树递归输出所有路径*/
+void disptree(Tree T)
+{
+ enstack(&S,T);
+ if(T->lchild==NULL&&T->rchild==NULL)
+ {
+  print(S);
+  printf("\n");
+ }
+ else
+ {
+  if(T->lchild) disptree(T->lchild);
+  if(T->rchild) disptree(T->rchild);
+ }
+ destack(&S);
+}
+int main()
+{
+ Tree T;
+ createtree(T);
+ scanf("%d",&a);
+ initstack(&S);
+ disptree(T);
+ printf("\n");
+ system("pause");
+ return 0;
+}
+
+
